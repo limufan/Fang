@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2" namespace="Fang.Data" assembly="Fang.Data">
+  <class name="ErshouFangDataModel" table="ErshouFang">
+    <id name="ID">
+      <generator class="identity"/>
+    </id>
+    <property name="Name"/>
+    <property name="Url"/>
+    <property name="Huxing"/>
+    <property name="Loucheng"/>
+    <property name="JianzhuNiandai"/>
+    <property name="Loupan"/>
+    <property name="Zhongjie"/>
+    <property name="Mianji"/>
+    <property name="Zongjia"/>
+    <property name="Danjia"/>
+    <property name="ZhuanquShijian"/>
+  </class>
+</hibernate-mapping>
