@@ -32,5 +32,7 @@ namespace Fang.Data
         public virtual double Danjia { set; get; }
 
         public virtual DateTime ZhuanquShijian { set; get; }
+
+        public virtual string ZhuanquBiaoti { set; get; }
     }
 }

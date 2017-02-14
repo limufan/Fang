@@ -14,24 +14,30 @@ namespace Fang.ConsoleApplication
 {
     public class ErshouFangZhuanquqi
     {
-        public ErshouFangZhuanquqi(DataProviderFactory dataProviderFactory, DateTime zhuanquShijian)
+        const string URI = "http://esf.cq.fang.com";
+
+        public ErshouFangZhuanquqi(DataProviderFactory dataProviderFactory, string zhuanquBiaoti, string zhuanquUrl)
         {
             ISession session = dataProviderFactory.OpenSession("ershoufang");
             DataProvider<ErshouFangDataModel> dataProvider = new DataProvider<ErshouFangDataModel>(session);
 
             this.DataProvider = dataProvider;
-            this.ZhuanquShijian = zhuanquShijian;
+            this.ZhuanquBiaoti = zhuanquBiaoti;
+            this.ZhuanquUrl = zhuanquUrl;
+
         }
 
         public DataProvider<ErshouFangDataModel> DataProvider { set; get; }
 
-        public DateTime ZhuanquShijian { set; get; }
+        public string ZhuanquBiaoti { set; get; }
+
+        public string ZhuanquUrl { set; get; }
 
         public List<ErshouFangInfo> Zhuanqu()
         {
-            List<ErshouFangInfo> list = this.ZhuanquInfo("http://esf.cq.fang.com/house-a011841-b0261/y71/");
+            List<ErshouFangInfo> list = this.ZhuanquInfo(URI + this.ZhuanquUrl);
             this.InsertDatabase(list);
-            Console.WriteLine("抓取完成");
+            Console.WriteLine(this.ZhuanquBiaoti + "抓取完成, 房源数量: " + list.Count);
 
             return list;
         }
@@ -53,7 +59,7 @@ namespace Fang.ConsoleApplication
                 if (nextPageUrl != null)
                 {
                     Thread.Sleep(1000);
-                    nextPageUrl = "http://esf.cq.fang.com" + nextPageUrl;
+                    nextPageUrl = URI + nextPageUrl;
                     infoList.AddRange(this.ZhuanquInfo(nextPageUrl));
                 }
             }
@@ -86,9 +92,10 @@ namespace Fang.ConsoleApplication
             string mianjiContent = e.QuerySelector(".area p").FirstChild.TextContent.Replace("?", "");
             info.Mianji = double.Parse(mianjiContent);
             info.Zongjia = double.Parse(e.QuerySelector(".price").TextContent);
-            string danjiaContent = e.QuerySelector(".danjia").TextContent.Replace("元/?", "");
+            string danjiaContent = e.QuerySelector(".danjia").TextContent.Replace("单价：", "").Replace("元/?", "");
             info.Danjia = double.Parse(danjiaContent);
-            info.ZhuanquShijian = this.ZhuanquShijian;
+            info.ZhuanquShijian = DateTime.Today;
+            info.ZhuanquBiaoti = this.ZhuanquBiaoti;
 
             return info;
         }

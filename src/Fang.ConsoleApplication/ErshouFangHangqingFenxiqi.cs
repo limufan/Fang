@@ -15,19 +15,29 @@ namespace Fang.ConsoleApplication
 {
     public class ErshouFangHangqingFenxiqi
     {
-        public ErshouFangHangqingFenxiqi(DataProviderFactory dataProviderFactory)
+        public ErshouFangHangqingFenxiqi(DataProviderFactory dataProviderFactory, string zhuanquBiaoti, DateTime zhuanquShijian, DateTime duibiZhuanquShijian)
         {
             ISession session = dataProviderFactory.OpenSession("ErshouFangHangqingFenxiqi");
             DataProvider<ErshouFangDataModel> dataProvider = new DataProvider<ErshouFangDataModel>(session);
 
             this.DataProvider = dataProvider;
+            this.ZhuanquBiaoti = zhuanquBiaoti;
+            this.ZhuanquShijian = zhuanquShijian;
+            this.DuibiZhuanquShijian = duibiZhuanquShijian;
         }
 
         public DataProvider<ErshouFangDataModel> DataProvider { set; get; }
 
+        public string ZhuanquBiaoti { set; get; }
+
+        public DateTime ZhuanquShijian { set; get; }
+
+        public DateTime DuibiZhuanquShijian { set; get; }
+
         public void Fenxi()
         {
-            IList<ErshouFangDataModel> models = this.DataProvider.GetModels();
+            IList<ErshouFangDataModel> models = this.DataProvider
+                .SelectModels(m => m.ZhuanquBiaoti == this.ZhuanquBiaoti && (m.ZhuanquShijian == this.ZhuanquShijian || m.ZhuanquShijian == this.DuibiZhuanquShijian));
 
             List<IGrouping<DateTime, ErshouFangDataModel>> groupingByZhuaquShijian = 
                 models.GroupBy(m => m.ZhuanquShijian).OrderByDescending(x => x.Key).ToList();
@@ -49,7 +59,12 @@ namespace Fang.ConsoleApplication
                 zuixingFabuFangyuanList.GroupBy(fangyuan => fangyuan.Loupan).OrderByDescending(g => g.Count()).ToList();
 
             string fileName = DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-            StreamWriter sw = File.CreateText(@"C:\Users\Administrator\Desktop\Fang\最新发布\" + fileName);
+            string path = Path.Combine(@"C: \Users\Administrator\Desktop\Fang", "最新发布", this.ZhuanquBiaoti, fileName);
+            if(!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+            StreamWriter sw = File.CreateText(path);
 
             foreach (IGrouping<string, ErshouFangDataModel> grouping in zuixingFabuFangyuanGroupbyLoupan)
             {
@@ -86,7 +101,12 @@ namespace Fang.ConsoleApplication
                 jiangjiaFangyuanList.GroupBy(fangyuan => fangyuan.Loupan).OrderByDescending(g => g.Count()).ToList();
 
             string fileName = DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
-            StreamWriter sw = File.CreateText(@"C:\Users\Administrator\Desktop\Fang\降价\" + fileName);
+            string path = Path.Combine(@"C: \Users\Administrator\Desktop\Fang", "降价", this.ZhuanquBiaoti, fileName);
+            if (!Directory.Exists(Path.GetDirectoryName(path)))
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(path));
+            }
+            StreamWriter sw = File.CreateText(path);
 
             foreach (IGrouping<string, ErshouFangDataModel> grouping in zuixingFabuFangyuanGroupbyLoupan)
             {

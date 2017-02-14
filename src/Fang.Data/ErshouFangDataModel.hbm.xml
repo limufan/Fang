@@ -15,5 +15,6 @@
     <property name="Zongjia"/>
     <property name="Danjia"/>
     <property name="ZhuanquShijian"/>
+    <property name="ZhuanquBiaoti"/>
   </class>
 </hibernate-mapping>

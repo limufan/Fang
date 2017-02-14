@@ -27,23 +27,25 @@ namespace Fang.ConsoleApplication
 
                 try
                 {
-                    if (cmd == "exit")
-                    {
-                        break;
-                    }
-                    else if (cmd == "Zhuanqu")
-                    {
-                        host.Zhuanqu();
-                    }
-                    else if (cmd == "Fenxi")
-                    {
-                        host.Fenxi();
-                    }
+                    
                         
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
+                }
+
+                if (cmd == "exit")
+                {
+                    break;
+                }
+                else if (cmd == "Zhuaqu")
+                {
+                    host.Zhuaqu();
+                }
+                else if (cmd == "Fenxi")
+                {
+                    host.Fenxi();
                 }
             }
 

@@ -31,5 +31,7 @@ namespace Fang.Core
         public double Danjia { set; get; }
 
         public DateTime ZhuanquShijian { set; get; }
+
+        public string ZhuanquBiaoti { set; get; }
     }
 }
